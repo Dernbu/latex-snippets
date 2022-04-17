@@ -1,5 +1,4 @@
-#Hotstring EndChars  
-#Hotstring C o *                                                                 
+#Hotstring C o *
 
 ; All greek symbols  - shortcut by their first two characters
 ::\al`t::\alpha  
