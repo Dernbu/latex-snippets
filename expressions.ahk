@@ -22,3 +22,7 @@
 ; \mathbb{}
 ; bb {space} --> \mathbb{|}
 ::bb ::\mathbb{{}{}}{left 1}
+
+; \pm \mp
+::pm ::\pm
+::mp ::\mp

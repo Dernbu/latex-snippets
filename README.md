@@ -16,12 +16,9 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 ### Fractions
 - This is currently in development.
 
-
 | Shorthand | Expression                 |
 | --------- | -------------------------- |
 | `/ `      | Empty Fraction `\frac{}{}` |
-
-
 
 ### Expressions
 #### Superscript & Subscript
@@ -39,7 +36,14 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 | `bb `          | `\mathbb{}` |
 
 #### Symbols
-- Note: `be ` is not a valid shorthand since it clashes with the word 'be'.
+
+| Shorthand | Symbol  |
+| --------- | ------- |
+| `pm `     | `\pm` ± |
+| `mp `     | `\mp` ∓ |
+
+##### Greek Symbols
+- Note: `be` is not a valid shorthand since it clashes with the word 'be'.
 
 | Shorthand       | Symbol       | Shorthand     | Symbol      | Shorthand     | Symbol     |
 | --------------- | ------------ | ------------- | ----------- | ------------- | ---------- |
@@ -52,6 +56,4 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 | `\ze `, `ze `   | `\zeta` ζ    | `Xi `         | `\Xi` Ξ     | `\Ps `, `Ps ` | `\Psi` Ψ   |
 | `\et `, `et `   | `\eta` η     | `xi `         | `\xi` ξ     | `\ps `, `ps ` | `\psi` ψ   |
 | `\Th `, `Th `   | `\Theta` Θ   | `Pi `         | `\Pi` Π     | `\Om `, `Om ` | `\Omega` Ω |
-| `\th `, `th `   | `\theta` Θ   | `pi `         | `\pi` π     | `\om `, `om ` | `\omega` ω |
-|                 |              |               |             |               |            |
-|                 |              |               |             |               |            |
+| `\th `, `th `   | `\theta` θ   | `pi `         | `\pi` π     | `\om `, `om ` | `\omega` ω |
