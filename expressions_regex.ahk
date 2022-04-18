@@ -9,3 +9,5 @@ RegExHotstrings("_([.\S]{0,})(\s)", "_{%$1%}")
 ;; superscript
 ; RegExHotstrings("\^(.{0,})(\s)", "^{%$1%}%$2%")
 RegExHotstrings("\^([.\S]{0,})(\s)", "^{%$1%}")
+
+; RegExHotstrings("\\begin-([a-zA-Z*]{1,})\s", "%$1%")

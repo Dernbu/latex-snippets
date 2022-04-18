@@ -4,13 +4,6 @@
 ::mk ::$${left 1}
 ; This is specially set for Obsidian, since Enter causes problems in a bullet list.
 ; TODO: Figure out how to write newline (asc 010 or 013) directly without mapping to enter.
-; ::dm ::+{Enter}$$+{Enter}+{Enter}$${Up 1}
-; ::dm ::
-; SendRaw `n
-; SendInput $$
-; SendRaw `n`n
-; SendInput $$ {up 1}
-; Return
 ; ::dm ::{U+000D}{U+000A}
 ; ::dm ::$$$${left 2}
 ; ::dm ::`r`n$$`r`n`r`n$${up 1}
@@ -27,8 +20,24 @@
 ::ali* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
 ; ::align* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
 
-; We replace enter with shift-enter for Obsidian.
-; ::ali ::\begin{{}align{}}+{Enter}+{Enter}\end{{}align{}}{Up 1}
-; ::align ::\begin{{}align{}}+{Enter}+{Enter}\end{{}align{}}{Up 1}
-; ::ali* ::\begin{{}align*{}}+{Enter}+{Enter}\end{{}align*{}}{Up 1}
-; ::align* ::\begin{{}align*{}}+{Enter}+{Enter}\end{{}align*{}}{Up 1}
+;;; \begin ENVIRONMENT
+::beg ::
+; beg -> \begin-
+SendInput \begin-
+; begin capturing input for environment name
+; visual mode --> can see your input 
+Input, envName, V, {Esc} {Space} {Tab}
+; delete the typed input and dash
+StringLen, envNameLength, envName
+SendInput {Backspace %envNameLength%}
+; need extra backspace for endchar in visual mode
+SendInput {Backspace 2}
+; input the rest of the environment
+SendInput {{}%envName%{}}{Enter}{Enter}\end{{}%envName%{}}
+; go back to the middle for typing
+SendInput {Left %envNameLength%}
+SendInput {Left 7}
+Return
+
+
+; turn on ending character agai
