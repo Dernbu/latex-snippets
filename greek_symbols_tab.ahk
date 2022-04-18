@@ -1,4 +1,4 @@
-#Hotstring C o *
+#Hotstring C o
 
 ; All greek symbols  - shortcut by their first two characters
 ::\al`t::\alpha  
@@ -15,12 +15,12 @@
 ::\ka`t::\kappa 
 ::\La`t::\Lambda 
 ::\la`t::\lambda 
-::\mu`t::\mu 
-::\nu`t::\nu 
-::\Xi`t::\Xi 
-::\xi`t::\xi 
-::\Pi`t::\Pi 
-::\pi`t::\pi 
+; ::\mu`t::\mu these hotstrings are useless, just waste a space key.
+; ::\nu`t::\nu 
+; ::\Xi`t::\Xi 
+; ::\xi`t::\xi 
+; ::\Pi`t::\Pi 
+; ::\pi`t::\pi 
 ::\va`t::\varpi 
 ::\Si`t::\Sigma 
 ::\si`t::\sigma 

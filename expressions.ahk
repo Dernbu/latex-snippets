@@ -26,3 +26,36 @@
 ; \pm \mp
 ::pm ::\pm
 ::mp ::\mp
+
+/*
+    superscript, subscript
+*/
+; subscript
++-::
+SendInput, {Text}_
+; begin capturing input for subscript
+; visual mode --> can see your input 
+Input, inputStr, V, {Esc} {Space} {Tab} {Enter}
+
+; go to start of subscript and put a {
+StringLen, inputStrLen, inputStr
+SendInput, {Left %inputStrLen%}{Left 1}{{}
+
+; go to end of subscript and put }
+SendInput, {Right %inputStrLen%}{}}{Delete}
+Return
+
+;superscript
++6::
+SendInput, {Text}^
+; begin capturing input for subscript
+; visual mode --> can see your input 
+Input, inputStr, V, {Esc} {Space} {Tab} {Enter}
+
+; go to start of subscript and put a {
+StringLen, inputStrLen, inputStr
+SendInput, {Left %inputStrLen%}{Left 1}{{}
+
+; go to end of subscript and put }
+SendInput, {Right %inputStrLen%}{}}{Delete}
+Return

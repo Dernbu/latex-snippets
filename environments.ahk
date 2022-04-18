@@ -1,5 +1,9 @@
 #Hotstring C o * R0
 
+/*
+    inline math mode, and
+    display math mode
+*/
 ; inline math mode
 ::mk ::$${left 1}
 ; This is specially set for Obsidian, since Enter causes problems in a bullet list.
@@ -13,20 +17,23 @@
 ; ::dm ::`r$$`r`r$${up 1}
 ; ::dm ::{asc 010}$${asc 010}{asc 010}$${up 1}
 
-
-; align and align*
+/*
+    align and align*
+*/
 ::ali ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
 ; ::align ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
 ::ali* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
 ; ::align* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
 
-;;; \begin ENVIRONMENT
+/*
+    \begin ENVIRONMENT
+*/
 ::beg ::
 ; beg -> \begin-
 SendInput \begin.
 ; begin capturing input for environment name
 ; visual mode --> can see your input 
-Input, envName, V, {Esc} {Space} {Tab}
+Input, envName, V, {Esc} {Space} {Tab} {Enter}
 ; delete the typed input and dash
 StringLen, envNameLength, envName
 SendInput {Backspace %envNameLength%}
