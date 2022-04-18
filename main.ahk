@@ -20,9 +20,5 @@
 #Include, expressions.ahk
 #Include, environments.ahk
 
-
-
-
-
 ; #Hotstring EndChars `t
 ; #Hotstring C o *0
