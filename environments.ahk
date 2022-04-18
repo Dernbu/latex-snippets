@@ -23,9 +23,9 @@
 
 ; align and align*
 ::ali ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
-::align ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
+; ::align ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
 ::ali* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
-::align* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
+; ::align* ::\begin{{}align*{}}{Enter}{Enter}\end{{}align*{}}{Left 12}
 
 ; We replace enter with shift-enter for Obsidian.
 ; ::ali ::\begin{{}align{}}+{Enter}+{Enter}\end{{}align{}}{Up 1}
