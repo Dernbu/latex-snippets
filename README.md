@@ -41,17 +41,17 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 #### Symbols
 - Note: `be ` is not a valid shorthand since it clashes with the word 'be'.
 
-| Shorthand        | Symbol                | Shorthand      | Symbol              | Shorthand      | Symbol              |
-| --------------- | --------------------- | ------------- | ------------------- | ------------- | ------------------- |
-| `\al `, `al `   | `\alpha` $\alpha$     | `\ka `, `ka ` | `\kappa` $\kappa$   | `\si `, `si ` | `\sigma` $\sigma$   |
-| `\be `, `beta ` | `\beta` $\beta$       | `\La `, `La ` | `\Lambda` $\Lambda$ | `\ta `, `ta ` | `\tau` $\tau$       |
-| `\ga `, `ga `   | `\gamma` $\gamma$     | `\la `, `la ` | `\lambda` $\lambda$ | `\Ph `, `Ph ` | `\Phi` $\Phi$       |
-| `\De `, `De `   | `\Delta` $\Delta$     | `mu `         | `\mu` $\mu$         | `\ph `, `ph ` | `\phi` $\phi$       |
-| `\de `, `de `   | `\delta` $\delta$     | `nu `         | `\nu` $\nu$         | `\va `, `va ` | `\varphi` $\varphi$ |
-| `\ep `, `ep `   | `\epsilon` $\epsilon$ | `Xi `         | `\Xi` $\Xi$         | `\ch `, `ch ` | `\chi` $\chi$       |
-| `\ze `, `ze `   | `\zeta` $\zeta$       | `xi `         | `\xi` $\xi$         | `\Ps `, `Ps ` | `\Psi` $\Psi$       |
-| `\et `, `et `   | `\eta` $\eta$         | `Pi `         | `\Pi` $\Pi$         | `\ps `, `ps ` | `\psi` $\psi$       |
-| `\Th `, `Th `   | `\Theta` $\Theta$     | `pi `         | `\pi` $\pi$         | `\Om `, `Om ` | `\Omega` $\Omega$   |
-| `\th `, `th `   | `\theta` $\theta$     | `\va `, `va ` | `\varpi` $\varpi$   | `\om `, `om ` | `\omega` $\omega$   |
-| `\io `, `io `   | `\iota` $\iota$       | `\Si `, `Si ` | `\Sigma` $\Sigma$   |               |                     |
-|                 |                       |               |                     |               |                     |
+| Shorthand       | Symbol       | Shorthand     | Symbol      | Shorthand     | Symbol     |
+| --------------- | ------------ | ------------- | ----------- | ------------- | ---------- |
+| `\al `, `al `   | `\alpha` α   | `\io `, `io ` | `\iota` ι   | `\Si `, `Si ` | `\Sigma` Σ |
+| `\be `, `beta ` | `\beta` β    | `\ka `, `ka ` | `\kappa` κ  | `\si `, `si ` | `\sigma` σ |
+| `\ga `, `ga `   | `\gamma` Γ   | `\La `, `La ` | `\Lambda` Λ | `\ta `, `ta ` | `\tau` τ   |
+| `\De `, `De `   | `\Delta` Δ   | `\la `, `la ` | `\lambda` λ | `\Ph `, `Ph ` | `\Phi` Φ   |
+| `\de `, `de `   | `\delta` δ   | `mu `         | `\mu` µ     | `\ph `, `ph ` | `\phi` φ   |
+| `\ep `, `ep `   | `\epsilon` ε | `nu `         | `\nu` ν     | `\ch `, `ch ` | `\chi` χ   |
+| `\ze `, `ze `   | `\zeta` ζ    | `Xi `         | `\Xi` Ξ     | `\Ps `, `Ps ` | `\Psi` Ψ   |
+| `\et `, `et `   | `\eta` η     | `xi `         | `\xi` ξ     | `\ps `, `ps ` | `\psi` ψ   |
+| `\Th `, `Th `   | `\Theta` Θ   | `Pi `         | `\Pi` Π     | `\Om `, `Om ` | `\Omega` Ω |
+| `\th `, `th `   | `\theta` Θ   | `pi `         | `\pi` π     | `\om `, `om ` | `\omega` ω |
+|                 |              |               |             |               |            |
+|                 |              |               |             |               |            |

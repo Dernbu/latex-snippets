@@ -21,13 +21,11 @@
 ; ::\xi ::\xi
 ; ::\Pi ::\Pi
 ; ::\pi ::\pi
-::\va ::\varpi
 ::\Si ::\Sigma
 ::\si ::\sigma
 ::\ta ::\tau
 ::\Ph ::\Phi
 ::\ph ::\phi
-::\va ::\varphi
 ::\ch ::\chi
 ::\Ps ::\Psi
 ::\ps ::\psi
@@ -55,13 +53,11 @@
 ::xi ::\xi
 ::Pi ::\Pi
 ::pi ::\pi
-::va ::\varpi
 ::Si ::\Sigma
 ::si ::\sigma
 ::ta ::\tau
 ::Ph ::\Phi
 ::ph ::\phi
-::va ::\varphi
 ::ch ::\chi
 ::Ps ::\Psi
 ::ps ::\psi
@@ -91,13 +87,11 @@ This below inserts space after the greek symbols - comment on top and uncomment 
 ::\xi ::\xi `
 ::\Pi ::\Pi `
 ::\pi ::\pi `
-::\va ::\varpi `
 ::\Si ::\Sigma `
 ::\si ::\sigma `
 ::\ta ::\tau `
 ::\Ph ::\Phi `
 ::\ph ::\phi `
-::\va ::\varphi `
 ::\ch ::\chi `
 ::\Ps ::\Psi `
 ::\ps ::\psi `
@@ -125,13 +119,11 @@ This below inserts space after the greek symbols - comment on top and uncomment 
 ::xi ::\xi `
 ::Pi ::\Pi `
 ::pi ::\pi `
-::va ::\varpi `
 ::Si ::\Sigma `
 ::si ::\sigma `
 ::ta ::\tau `
 ::Ph ::\Phi `
 ::ph ::\phi `
-::va ::\varphi `
 ::ch ::\chi `
 ::Ps ::\Psi `
 ::ps ::\psi `
