@@ -6,19 +6,20 @@
 */
 ; inline math mode
 ::mk ::$${left 1}
-; This is specially set for Obsidian, since Enter causes problems in a bullet list.
-; TODO: Figure out how to write newline (asc 010 or 013) directly without mapping to enter.
-; ::dm ::{U+000D}{U+000A}
-; ::dm ::$$$${left 2}
-; ::dm ::`r`n$$`r`n`r`n$${up 1}
-::dm ::{Enter}$${Enter}{Enter}$${Left 3}
-; ::dm ::`n$$`n`n$${up 1}
-; ::dm ::{asc 013}$${asc 013}{asc 013}$${up 1}
-; ::dm ::`r$$`r`r$${up 1}
-; ::dm ::{asc 010}$${asc 010}{asc 010}$${up 1}
+
+::dm ::
+; Clear next line for input, important for lists in Obsidian, 
+; where next line may have a bullet point.
+;   We do enter space, in case enter encounters an empty line, 
+;   then there needs to be a space for the selection and deletion (shift+Home) delete
+SendInput {Enter}{Space}
+SendInput +{Home}{Backspace}
+SendInput $${Enter}{Enter}$${Left 3}
+Return
 
 /*
     align and align*
+    We assume dm has been done here, so no need to clear line.
 */
 ::ali ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
 ; ::align ::\begin{{}align{}}{Enter}{Enter}\end{{}align{}}{Left 12}
