@@ -23,7 +23,7 @@
 ;;; \begin ENVIRONMENT
 ::beg ::
 ; beg -> \begin-
-SendInput \begin-
+SendInput \begin.
 ; begin capturing input for environment name
 ; visual mode --> can see your input 
 Input, envName, V, {Esc} {Space} {Tab}

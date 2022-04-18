@@ -3,7 +3,11 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 - Note that all snippets are triggered by space.
 
 ## Environments
+### Typing `\begin{environment}`
+1. Type `beg{space}`. Text will autofill to `\begin.`
+2. Then type the environment name, followed by a space to autofill `\begin{env_name}\end{env_name}`!
 
+### Other Shorthands
 | Shorthand | Environment                |
 | --------- | -------------------------- |
 | `mk `     | Inline Math Mode (`$$`)    |
