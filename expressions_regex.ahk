@@ -28,4 +28,5 @@ RegExHotstrings("([a-zA-Z0-9]{1,})/([a-zA-Z0-9]{1,})(\s)", "\frac{%$1%}{%$2%}")
     Bar
 */
 RegExHotstrings("([a-zA-Z]+)\.hat\s", "\hat{%$1%}")
+RegExHotstrings("([a-zA-Z]+)\.aht\s", "\hat{%$1%}")
 RegExHotstrings("([a-zA-Z]+)\.bar\s", "\overline{%$1%}")

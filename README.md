@@ -26,10 +26,12 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 
 ### Expressions
 #### Superscript & Subscript
-- Curly braces `{}` are automatically placed between `_` or `^` when space is pressed.
+- Curly braces `{}` are automatically placed between `_` or `^` and cursor  when space is pressed.
 
+#### `\hat{}` and `\overline{}`
+- Type `x.hat` (or `x.aht`) and `x.bar` for `\hat{x}` and `\overline{x}`.
 
-#### Expressions of the forms `\{type}{}`
+#### Other Expressions of the forms `\[type]{}`
 - Cursor is placed in between brackets.
 
 | Shortcut       | String      |

@@ -22,3 +22,11 @@
 
 ; #Hotstring EndChars `t
 ; #Hotstring C o *0
+
+~a::
+MsgBox, a
+Return
+
+~+a::
+MsgBox, A
+Return
