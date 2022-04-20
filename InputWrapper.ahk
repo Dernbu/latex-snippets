@@ -262,7 +262,7 @@ static makeStringCaptureFunction(str) {
     */
     str := strReplace(str, "\", "\\")
     str := strReplace(str, ".", "\.")
-    return InputWrapper.makeRegexCaptureFunction("(\s|^)" str "$")
+    return InputWrapper.makeRegexCaptureFunction("([^a-zA-Z0-9_])" str "$")
 }
     /*
         State helping functions
