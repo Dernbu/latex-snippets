@@ -17,6 +17,22 @@ class TextLog {
     __new() {
     }
 
+    findMarkerDistance(marker) {
+        /*
+            Strings can be makred by %&i%, and pressing the given key will jump to the next %&i%.
+            @param marker (str)
+            
+            If marker does not exist, returns ""
+            If marker exists, return the distance between cursor position and marker position (start of marker).
+            -ve => marker position is to the left of cursor, +ve => marker position is to the right of cursor
+        */
+
+        markerPos := InStr(this.loggedString, marker)
+
+        return markerPos == 0 ? "" : markerPos - (this.caretPos + 1)
+
+    }
+
     sendString(str) {
         ; Add a string at where the caret is, and move caret position right by 1.
         this.loggedString := this._getCaretLeft() str this._getCaretRight()
@@ -27,6 +43,11 @@ class TextLog {
         ; Backspace by n characters (default 1), from where the caret is.
 
         ; reset if this goes outside of the saved characters
+
+        if (n == 0) {
+            Return
+        }
+
         if (this.caretPos < n) {
             this.reset()
             return
@@ -40,6 +61,10 @@ class TextLog {
         ; Delete by n characters (default 1), from where the caret is.
         ; is like pressing the delete button
 
+        if (n == 0) {
+            Return
+        }
+
         if (this.caretPos + n > StrLen(this.loggedstring)) {
             this.reset()
             return
@@ -49,6 +74,11 @@ class TextLog {
     }
 
     sendLeft(n := 1, ctrlState := False) {
+
+        if (n == 0) {
+            Return
+        }
+
         if (this.caretPos < n) {
             this.reset()
             return
@@ -59,6 +89,10 @@ class TextLog {
 
     sendRight(n := 1, ctrlState := False) {
 
+        if (n == 0) {
+            Return
+        }
+
         if (this.caretPos + n > StrLen(this.loggedstring)) {
             this.reset()
             return
@@ -68,7 +102,12 @@ class TextLog {
     }
 
     sendEnter(n := 1) {
-        this.sendString(Chr(13))
+        if (n == 0) {
+            Return
+        }
+
+        Loop n
+            this.sendString(Chr(13))
     }
 
     reset() {

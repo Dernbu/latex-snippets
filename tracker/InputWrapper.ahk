@@ -29,7 +29,7 @@ class InputWrapper {
         ; Space, Enter and tab: Action keys
         Hotkey "$Space", ObjBindMethod(this, "onAction")
         ; Hotkey "Enter", ObjBindMethod(this, "onAction")
-        ; Hotkey "Tab", ObjBindMethod(this, "onAction")
+        Hotkey "$Tab", ObjBindMethod(this, "gotoMarker")
 
         ; Mouse hotkeys: Reset the textLog object
         HotKey "~LButton", ObjBindMethod(this, "onMousePress")
@@ -37,6 +37,42 @@ class InputWrapper {
         HotKey "~MButton", ObjBindMethod(this, "onMousePress")
         HotKey "~XButton1", ObjBindMethod(this, "onMousePress")
         HotKey "~XButton2", ObjBindMethod(this, "onMousePress") 
+
+    }
+
+    gotoMarker(key) {
+        /*
+            Strings can be makred by %&i%, and pressing the given key will jump to the next %&i%.
+        */
+        Loop 10 {
+            marker := "%&" A_Index-1 "%"
+
+            markerDistance := this.textLog.findMarkerDistance(marker)
+
+            ; Not found
+            if (markerDistance == "") {
+                Continue
+            }
+
+            if (markerDistance <= -StrLen(marker)) {
+                ; entire marker is to left of cursor
+                ; go to back of marker and press backspace
+                this.sendLeft(- markerDistance - StrLen(marker))
+                this.sendBackspace(StrLen(marker))
+
+            } else if (markerDistance >= -StrLen(marker) && markerDistance <= 0) {
+                ; cursor is inside marker
+                ; go to back of marker and press backspace
+                this.sendRight(StrLen(marker) + markerDistance)
+                this.sendBackspace(StrLen(marker))
+            } else {
+                ; marker is to right of cursor
+                ; go to front of marker and press delete
+                this.sendRight(markerDistance)
+                this.sendDelete(StrLen(marker))
+            }
+            Break
+        }
 
     }
 
@@ -59,6 +95,8 @@ class InputWrapper {
             replacementStr := getRegexReplacementString(captureGroup, replacementStr)
             this.sendBackspace(StrLen(CaptureGroup[0]))
             this.sendString(replacementStr)
+
+            this.gotoMarker("")
 
             Break
         }
@@ -129,6 +167,10 @@ class InputWrapper {
 
     }
 
+    /*
+        Wrapped functions that send stuff
+    */
+
     sendBackspace(n := 1) {
         SendInput "{Backspace " n "}"
         this.textLog.sendBackspace(n)
@@ -137,6 +179,20 @@ class InputWrapper {
     sendString(string) {
         SendInput "{raw}" string
         this.textLog.sendString(string)
+    }
+
+    sendLeft(n := 1) {
+        SendInput "{Left " n "}"
+        this.textLog.sendLeft(n)
+    }
+    sendRight(n := 1) {
+        SendInput "{Right " n "}"
+        this.textLog.sendRight(n)
+
+    }
+    sendDelete(n := 1) {
+        SendInput "{Delete " n "}"
+        this.textLog.sendDelete(n)
     }
 
     replaceRightmostString(captureStr, replacementStr) {
@@ -168,17 +224,17 @@ class InputWrapper {
             capture := ""
             RegExMatch(str, regex, &capture)
         return capture
-        }
-    return newFunction
     }
+    return newFunction
+}
 
-    static makeStringCaptureFunction(str) {
+static makeStringCaptureFunction(str) {
             /*
             Function to dynamically generate capture functions from a string.
             TODO
-        */
-        return InputWrapper.makeRegexCaptureFunction("(\s|^)" str "$")
-    }
+    */
+    return InputWrapper.makeRegexCaptureFunction("(\s|^)" str "$")
+}
     /*
         State helping functions
 */
