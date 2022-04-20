@@ -1,3 +1,4 @@
+; AHK V2
 #Include TextLogger.ahk
 
 class InputWrapper {
@@ -44,6 +45,9 @@ class InputWrapper {
         /*
             Strings can be makred by %&i%, and pressing the given key will jump to the next %&i%.
         */
+
+        pressKey := True
+
         Loop 10 {
             marker := "%&" A_Index-1 "%"
 
@@ -71,9 +75,22 @@ class InputWrapper {
                 this.sendRight(markerDistance)
                 this.sendDelete(StrLen(marker))
             }
+            pressKey := False
             Break
         }
+        ; If nothing is done, you have to press the key
+        if (pressKey) {
+            key := StrReplace(key, "$")
+            Switch key {
+            Case "Space":
+                this.sendString(" ")
+            Case "Tab":
+                this.sendString("`t")
+            Default:
+                this.sendString(key)
+            }
 
+        }
     }
 
     onAction(key) {
@@ -206,6 +223,16 @@ class InputWrapper {
     }
 
     addRegexHotString(regex, replacement) {
+        /*
+            Adds a regex hotstring to the target object.
+            @param regex the regex that triggers the hotstring.
+                Note that the regex is only triggered/checked when pressing space (before space has been sent)
+                Note that the regex should end with a $ (check end of string, right before caret)
+            
+            @parem replacement the replacement string to replace the target string captured by the regex.
+                Syntax: %$i% for the ith capture group
+                        %&i% for the ith cursor hop (first cursor hop is executed automatically)
+        */
         this.captureReplacementFunctions.set(replacement, InputWrapper.makeRegexCaptureFunction(regex))
     }
 
@@ -231,8 +258,10 @@ class InputWrapper {
 static makeStringCaptureFunction(str) {
             /*
             Function to dynamically generate capture functions from a string.
-            TODO
+            TODO more efficient way?
     */
+    str := strReplace(str, "\", "\\")
+    str := strReplace(str, ".", "\.")
     return InputWrapper.makeRegexCaptureFunction("(\s|^)" str "$")
 }
     /*
