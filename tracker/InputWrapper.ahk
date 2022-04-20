@@ -1,59 +1,42 @@
 #Include TextLogger.ahk
 
-regexCaptureFunction(regex) {
-    /*
-        Function to dynamically generate regex capture functions from a regex string.
-    */
-    newFunction(str) {
-        capture := ""
-        RegExMatch(str, regex, &capture)
-        return capture
-    }
-    return newFunction
-}
-
 class InputWrapper {
     /*
         A functor class that wraps around a TextLog class.
     */
 
     /*
-        Static Final Map - keys are replacement strings and value are the regex capture functions.
+        Map - keys are replacement strings and value are the regex capture functions.
     */
-    static CAPTURE_REPLACEMENT_FUNCTIONS := Map(
-        "\hat{%$1%}", regexCaptureFunction("([a-zA-Z0-9_]*)\.hat$"), ; x.hat => \hat{x}
-        "\overline{%$1%}", regexCaptureFunction("([a-zA-Z0-9_]*)\.bar$"), ; x.bar => \overline{x}
-        "%$1%{%$2%}", regexCaptureFunction("([\^_])([a-zA-Z0-9]+)$") ; x_bar, x^hat => x_{bar}, x^{hat}
-    )
+    captureReplacementFunctions := Map()
 
     textLog := "" ; TextLog object wrapped by this object
     inputHook := "" ; InputHook object 
 
-    __new(loggedString := "", caretPosition := "") {
+    __new() {
 
         ; initialise textLog variable
-        this.textLog := TextLog(loggedString, caretPosition)
+        this.textLog := TextLog()
 
         OutputDebug "Starting Input Logger:"
         this.inputHook := InputHook("VC")
         this.inputHook.keyOpt("{All}", "NV")
-        ; this.inputHook.OnChar := this.onKeyPress
         this.inputHook.OnChar := ObjBindMethod(this, "onKeyPress")
         this.inputHook.OnKeyDown := ObjBindMethod(this, "onKeyDown")
 
         this.inputHook.Start()
 
         ; Space, Enter and tab: Action keys
-        Hotkey "Space", ObjBindMethod(this, "onAction")
+        Hotkey "$Space", ObjBindMethod(this, "onAction")
         ; Hotkey "Enter", ObjBindMethod(this, "onAction")
         ; Hotkey "Tab", ObjBindMethod(this, "onAction")
 
         ; Mouse hotkeys: Reset the textLog object
-        ; HotKey "~LButton", ObjBindMethod(this, "onMousePress")
-        ; HotKey "~RButton", ObjBindMethod(this, "onMousePress")
-        ; HotKey "~MButton", ObjBindMethod(this, "onMousePress")
-        ; HotKey "~XButton1", ObjBindMethod(this, "onMousePress")
-        ; HotKey "~XButton2", ObjBindMethod(this, "onMousePress") 
+        HotKey "~LButton", ObjBindMethod(this, "onMousePress")
+        HotKey "~RButton", ObjBindMethod(this, "onMousePress")
+        HotKey "~MButton", ObjBindMethod(this, "onMousePress")
+        HotKey "~XButton1", ObjBindMethod(this, "onMousePress")
+        HotKey "~XButton2", ObjBindMethod(this, "onMousePress") 
 
     }
 
@@ -62,7 +45,9 @@ class InputWrapper {
             The onAction function 
         */
 
-        For replacementStr, captureGroupFunction in InputWrapper.CAPTURE_REPLACEMENT_FUNCTIONS {
+        regexReplaced := False
+        ; Loop through all replacements and capture group, and do the first one you find
+        For replacementStr, captureGroupFunction in this.captureReplacementFunctions {
 
             captureGroup := this.getRightmostCaptureGroup(captureGroupFunction)
 
@@ -70,10 +55,23 @@ class InputWrapper {
                 Continue
             }
 
+            regexReplaced := True
             replacementStr := getRegexReplacementString(captureGroup, replacementStr)
-            ; MsgBox captureGroup[0] " : " captureGroup[1] " : " replacementStr
-            this.replaceRightmostString(captureGroup[0], replacementStr)
+            this.sendBackspace(StrLen(CaptureGroup[0]))
+            this.sendString(replacementStr)
 
+            Break
+        }
+
+        ; if nothign is done, just send the string
+        if (!regexReplaced) {
+            key := StrReplace(key, "$")
+            Switch key {
+            Case "Space":
+                this.sendString(" ")
+            Default:
+                this.sendString(key)
+            }
         }
     }
 
@@ -82,7 +80,7 @@ class InputWrapper {
         if (char == " ") {
             return
         }
-        this.textLog.addStr(char)
+        this.textLog.sendString(char)
         OutputDebug "Key Pressed: " char
         OutputDebug this._getPrintStr()
     }
@@ -94,13 +92,13 @@ class InputWrapper {
         Switch (keyName) {
 
         Case "Backspace":
-            this.textLog.backspace(1, InputWrapper.getCtrlState())
+            this.textLog.sendBackspace(1, InputWrapper.getCtrlState())
         Case "Left":
-            this.textLog.moveLeft(1, InputWrapper.getCtrlState())
+            this.textLog.sendLeft(1, InputWrapper.getCtrlState())
         Case "Right":
-            this.textLog.moveRight(1, InputWrapper.getCtrlState())
+            this.textLog.sendRight(1, InputWrapper.getCtrlState())
         Case "Delete":
-            this.textLog.delete(1, InputWrapper.getCtrlState())
+            this.textLog.sendDelete(1, InputWrapper.getCtrlState())
 
         }
 
@@ -131,40 +129,106 @@ class InputWrapper {
 
     }
 
+    sendBackspace(n := 1) {
+        SendInput "{Backspace " n "}"
+        this.textLog.sendBackspace(n)
+    }
+
+    sendString(string) {
+        SendInput "{raw}" string
+        this.textLog.sendString(string)
+    }
+
     replaceRightmostString(captureStr, replacementStr) {
+        /*
+            Replace the rightmost string  in the buffer with the given replacement string
+            Also replaces the string in textLog
+        */
         this.textLog.replaceRightmostString(captureStr, replacementStr)
         ; MsgBox captureStr " | " replacementStr
         SendInput "{Backspace " StrLen(captureStr) "}{Raw}" replacementStr
     }
 
+    addRegexHotString(regex, replacement) {
+        this.captureReplacementFunctions.set(replacement, InputWrapper.makeRegexCaptureFunction(regex))
+    }
+
+    addHotString(string, replacement) {
+        this.captureReplacementFunctions.set("%$1%" replacement, InputWrapper.makeStringCaptureFunction(string))
+    }
+
+    /*
+        Utility functions to make dynamic function objects for capture groups
+    */
+    static makeRegexCaptureFunction(regex) {
+    /*
+        Function to dynamically generate regex capture functions from a regex string.
+        */
+        newFunction(str) {
+            capture := ""
+            RegExMatch(str, regex, &capture)
+        return capture
+        }
+    return newFunction
+    }
+
+    static makeStringCaptureFunction(str) {
+            /*
+            Function to dynamically generate capture functions from a string.
+            TODO
+        */
+        return InputWrapper.makeRegexCaptureFunction("(\s|^)" str "$")
+    }
     /*
         State helping functions
-    */
-    static getCapsLockState() {
-        return GetKeyState("CapsLock", "T")
-    }
+*/
+static getCapsLockState() {
+    return GetKeyState("CapsLock", "T")
+}
 
-    static getShiftState() {
-        return GetKeyState("Shift", "P")
-    }
+static getShiftState() {
+    return GetKeyState("Shift", "P")
+}
 
-    static getCapsState() {
-        ; Get state of overall caps - considering both caps lock and shift
-        return GetKeyState("CapsLock", "T")^GetKeyState("Shift", "P")
-    }
+static getCapsState() {
+    ; Get state of overall caps - considering both caps lock and shift
+    return GetKeyState("CapsLock", "T")^GetKeyState("Shift", "P")
+}
 
-    static getCtrlState() {
-        return GetKeyState("Control", "P")
-    }
+static getCtrlState() {
+    return GetKeyState("Control", "P")
+}
 
-    static getAltState() {
-        return GetKeyState("Alt", "P")
-    }
+static getAltState() {
+    return GetKeyState("Alt", "P")
+}
 
-    _getPrintStr() {
-        return this.textLog._getPrintStr()
-    }
+_getPrintStr() {
+    return this.textLog._getPrintStr()
+}
 
 }
 
-t := InputWrapper()
+/*
+Utility functions
+*/
+
+getRegexReplacementString(captureGroup, replacementStr) {
+    /*
+    Get the regex replacement string by replacing %$i% wtih the ith capture group.
+    */
+
+    captureGroupNumber := 1
+
+    while True {
+        if (InStr(replacementStr, "%$" captureGroupNumber "%") == 0) {
+            Break
+        }
+        ; OutputDebug replacementStr
+        replacementStr := StrReplace(replacementStr, "%$" captureGroupNumber "%" , captureGroup[captureGroupNumber])
+        OutputDebug "replaced" replacementStr
+        captureGroupNumber += 1
+    }
+
+    return replacementStr
+}

@@ -1,12 +1,6 @@
-hatCaptureFunction(str) {
-    capture := ""
-    RegExMatch(str, "[a-zA-Z0-9_]*.hat$", &capture)
-    return capture[0]
-}
+a := ["1", "2", "3", "4", "5"]
+a.InsertAt(2, 10)
 
-fn := hatCaptureFunction
-; MsgBox fn("b.hat")
+Loop a.Length
+    OutputDebug a[A_Index]
 
-CAPTURE_REPLACEMENT_FUNCTIONS = Map(
-        hat, ["\hat{%$1%}", hatCaptureFunction]
-    )
