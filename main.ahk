@@ -1,6 +1,17 @@
 ; AHK V2
 #Include InputWrapper.ahk
 
+; FIX: hotstrings should only jump to %&0%, not others (DONE)
+; TODO; make string to str converstion safe for special characters (DONE)
+; TODO: handle greek characters (DONE)
+; TODO: \frac{}{}
+; TODO: handle selection delete
+; TODO: come up with way to add custom hotstrings
+; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
+; TODO: option to customise important string options
+; Currently uses space to trigger regex search, but is it possible to do it every keystroke?
+
+
 /*
     Synatax:
     - regex is just regex
@@ -32,9 +43,41 @@ hotStrings.addHotString("bb", "\mathbb{%&0%}%&1%") ; bb => \mathbb{}
 hotStrings.addHotString("beg", "\begin.%&0%") ; beg => \begin.<cursor>
 hotStrings.addRegexHotString("\\begin\.([a-zA-Z0-9*]+)", "\begin{%$1%}`r%&0%`r\end{%$1%}`r%&1%") ; \begin.<input> -> environment
 
-; FIX: hotstrings should only jump to %&0%, not others (DONE)
-; TODO; make string to str converstion safe for special characters 
-; TODO: handle selection delete
-; TODO: come up with way to add custom hotstrings
-; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
-; TODO: option to customise important string options
+
+
+/*
+    All greek symbols  - shortcut by their first two characters al or \al => alpha.
+    Only exceptions are :
+        \beta - be clashes with the word be, and so beta is the shortcut instead.
+        two-letter greek words, cause \mu => \mu as a hotstring is dumb
+*/
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?al$","%$1%\alpha")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?be$","%$1%\beta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ga$","%$1%\gamma")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?De$","%$1%\Delta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?de$","%$1%\delta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ep$","%$1%\epsilon")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ze$","%$1%\zeta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?et$","%$1%\eta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Th$","%$1%\Theta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?th$","%$1%\theta")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?io$","%$1%\iota")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ka$","%$1%\kappa")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?La$","%$1%\Lambda")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?la$","%$1%\lambda")
+hotStrings.addHotString("mu", "\mu") ; Obviously, \mu => \mu is a shitty hotstring
+hotStrings.addHotString("nu", "\nu")
+hotStrings.addHotString("Xi", "\Xi")
+hotStrings.addHotString("xi", "\xi")
+hotStrings.addHotString("Pi", "\Pi")
+hotStrings.addHotString("pi", "\pi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Si$", "%$1%\Sigma")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?si$", "%$1%\sigma")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ta$", "%$1%\tau")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Ph$", "%$1%\Phi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ph$", "%$1%\phi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ch$", "%$1%\chi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Ps$", "%$1%\Psi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ps$", "%$1%\psi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Om$", "%$1%\Omega")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?om$", "%$1%\omega")
