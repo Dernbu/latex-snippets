@@ -41,14 +41,15 @@ class InputWrapper {
 
     }
 
-    gotoMarker(key) {
+    gotoMarker(key, markerNo := 10) {
         /*
             Strings can be makred by %&i%, and pressing the given key will jump to the next %&i%.
+                - markerNo is the number of markers to check. Set this to 1 when this is invoked by a hotstring.
         */
 
         pressKey := True
 
-        Loop 10 {
+        Loop markerNo {
             marker := "%&" A_Index-1 "%"
 
             markerDistance := this.textLog.findMarkerDistance(marker)
@@ -113,7 +114,7 @@ class InputWrapper {
             this.sendBackspace(StrLen(CaptureGroup[0]))
             this.sendString(replacementStr)
 
-            this.gotoMarker("")
+            this.gotoMarker("", 1)
 
             Break
         }
@@ -260,9 +261,24 @@ static makeStringCaptureFunction(str) {
             Function to dynamically generate capture functions from a string.
             TODO more efficient way?
     */
-    str := strReplace(str, "\", "\\")
-    str := strReplace(str, ".", "\.")
-    return InputWrapper.makeRegexCaptureFunction("([^a-zA-Z0-9_])" str "$")
+    ; escaping special charactes  (PCRE)
+    ; SourceL https://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
+    str := strReplace(str, ".", "\.") 
+    str := strReplace(str, "^", "\^") 
+    str := strReplace(str, "$", "\$") 
+    str := strReplace(str, "*", "\*") 
+    str := strReplace(str, "+", "\+") 
+    str := strReplace(str, "-", "\-") 
+    str := strReplace(str, "?", "\?") 
+    str := strReplace(str, "(", "\(") 
+    str := strReplace(str, ")", "\)") 
+    str := strReplace(str, "[", "\[") 
+    str := strReplace(str, "]", "\]") 
+    str := strReplace(str, "{", "\{")  
+    str := strReplace(str, "}", "\}") 
+    str := strReplace(str, "\", "\\") 
+    str := strReplace(str, "|", "\|")
+    return InputWrapper.makeRegexCaptureFunction("([^a-zA-Z0-9_]?)" str "$")
 }
     /*
         State helping functions

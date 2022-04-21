@@ -32,7 +32,9 @@ hotStrings.addHotString("bb", "\mathbb{%&0%}%&1%") ; bb => \mathbb{}
 hotStrings.addHotString("beg", "\begin.%&0%") ; beg => \begin.<cursor>
 hotStrings.addRegexHotString("\\begin\.([a-zA-Z0-9*]+)", "\begin{%$1%}`r%&0%`r\end{%$1%}`r%&1%") ; \begin.<input> -> environment
 
-; TODO; make string to str converstion safe for special characters
-; FIX: hotstrings should only jump to %&0%, not others
+; FIX: hotstrings should only jump to %&0%, not others (DONE)
+; TODO; make string to str converstion safe for special characters 
 ; TODO: handle selection delete
 ; TODO: come up with way to add custom hotstrings
+; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
+; TODO: option to customise important string options
