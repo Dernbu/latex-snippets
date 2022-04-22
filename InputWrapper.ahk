@@ -224,7 +224,6 @@ class InputWrapper {
             Also replaces the string in textLog
         */
         this.textLog.replaceRightmostString(captureStr, replacementStr)
-        ; MsgBox captureStr " | " replacementStr
         SendInput "{Backspace " StrLen(captureStr) "}{Raw}" replacementStr
     }
 
@@ -246,15 +245,13 @@ class InputWrapper {
                         %&i% for the ith cursor hop (first cursor hop is executed automatically)
         */
         newCaptureFuntion(str) {
-            capture := ""
-            RegExMatch(str, regex, &capture)
-            if (capture != "") {
+            if (RegExMatch(str, regex, &capture)) {
                 return stringCaptureFunction(str)
             }
             return ""
         }
 
-        return newCaptureFuntion
+        this.captureReplacementFunctions.push([replacement, newCaptureFuntion])
 
     }
     addRegexHotString(regex, replacement) {
@@ -360,9 +357,14 @@ getRegexReplacementString(captureGroup, replacementStr) {
         if (InStr(replacementStr, "%$" captureGroupNumber "%") == 0) {
             Break
         }
+
         ; OutputDebug replacementStr
+        ; OutputDebug "Capturegroup 0" captureGroup[0]
+        ; OutputDebug "Capturegroup 1" captureGroup[1]
+        ; OutputDebug "Capturegroup 2" captureGroup[2]
+
         replacementStr := StrReplace(replacementStr, "%$" captureGroupNumber "%" , captureGroup[captureGroupNumber])
-        OutputDebug "replaced" replacementStr
+        ; OutputDebug "replaced" replacementStr
         captureGroupNumber += 1
     }
 

@@ -83,8 +83,11 @@ hotStrings.addHotString("sqrt", "\sqrt{%&0%}%&1%") ; sqrt => \sqrt{%&0%}%&1%
 ; hotStrings.addHotString("/", "\frac{%&0%}{%&1%}%&2%")
 
 ; Fractions
+hotStrings.addCustomRegexHotstring("\([a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+\)\/$", fractionOnlyNumeratorCaptureGroup, "\frac{%$1%}{%&0%}%&1%") ; a/ => \frac{a}{
+hotStrings.addCustomRegexHotstring("\([a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+\)\/[a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+$", fractionCaptureGroup, "\frac{%$1%}{%$2%}%&0%") ; a/ => \frac{a}{
 hotStrings.addRegexHotString("([a-zA-Z0-9_\\{}\(\)\[\]]+)\/$", "\frac{%$1%}{%&0%}%&1%") ; a/ => \frac{a}{|}
-hotStrings.addHotString("/", "\frac{%&0%}{%&1%}%&2%"); / => \frac{|}{}
+hotStrings.addRegexHotString("([a-zA-Z0-9_\\{}\(\)\[\]]+)\/([a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+)$", "\frac{%$1%}{%$2%}") ; a/b=> \frac{a}{b}|
+hotStrings.addHotString("/", "\frac{%&0%}{%&1%}%&2%") ; / => \frac{|}{}
 
 /*
     --- ENVIRONMENTS ---
@@ -92,7 +95,6 @@ hotStrings.addHotString("/", "\frac{%&0%}{%&1%}%&2%"); / => \frac{|}{}
 hotStrings.addHotString("mk", "$%&0%$%&1%") ; mk => inline math
 hotStrings.addHotString("dm", "`r$$`r%&0%`r$$`r%&1%") ; dm => display math
 
-; hotStrings.addRegexHotString("(ali\*?)$", "\begin{%$1%}`r%&0%`r\end{%$1%}`r%&1%") ; ali/ali* => \begin{align}/{align*}
 hotStrings.addHotString("ali", "\begin{align}`r%&0%`r\end{align}`r%&1%")
 hotStrings.addHotString("ali*", "\begin{align*}`r%&0%`r\end{align*}`r%&1%")
 hotStrings.addHotString("te", "\text{%&0%}%&1%") ; te => \text{}
@@ -102,3 +104,61 @@ hotStrings.addHotString("bb", "\mathbb{%&0%}%&1%") ; bb => \mathbb{}
 hotStrings.addHotString("beg", "\begin.%&0%") ; beg => \begin.<cursor>
 hotStrings.addRegexHotString("\\begin\.([a-zA-Z0-9*]+)", "\begin{%$1%}`r%&0%`r\end{%$1%}`r%&1%") ; \begin.<input> -> environment
 
+
+/*
+    Custom Capturegroup functions
+*/
+
+fractionOnlyNumeratorCaptureGroup(str) {
+    ; For getting the capture group of (something)/ => auto-detect brackets around numerator
+
+    depth := 0
+    index := StrLen(str) - 1
+    Loop StrLen(str) {
+        if (SubStr(str, index, 1) == ")") {
+            depth += 1
+        }
+        if (SubStr(str, index, 1) == "(") {
+            depth -= 1
+        }
+        if (depth == 0) {
+            break
+        }
+        index -= 1
+    }
+
+    ; creating capture group object
+    result := Map(0, SubStr(str, index, StrLen(str) - index) "/", 1, SubStr(str, index + 1, StrLen(str) - index - 2))
+    return result
+}
+
+fractionCaptureGroup(str) {
+    ; for getting the caputre group of (something)/something_else => auto-detect brackets around numerator
+    num_dim_array := StrSplit(str, "/")
+    
+    ; numerator:
+    depth := 0
+    index := StrLen(num_dim_array[1])
+    Loop StrLen(num_dim_array[1]) {
+        if (SubStr(num_dim_array[1], index, 1) == ")") {
+            depth += 1
+        }
+        if (SubStr(num_dim_array[1], index, 1) == "(") {
+            depth -= 1
+        }
+        if (depth == 0) {
+            break
+        }
+        index -= 1
+    }
+
+    
+
+
+    return Map(0, str,
+        1, SubStr(num_dim_array[1], index + 1, StrLen(num_dim_array[1]) - index - 1),
+        2, num_dim_array[2]
+    )
+
+    
+}

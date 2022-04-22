@@ -18,11 +18,15 @@ This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optim
 ## Expressions
 
 ### Fractions
-- This is currently in development.
+- `/` is a shorthand for `\frac{}{}`:
 
-| Shorthand | Expression                 |
-| --------- | -------------------------- |
-| `/ `      | Empty Fraction `\frac{}{}` |
+| Shorthand    | Expression                                            |
+| ------------ | ----------------------------------------------------- |
+| `/ `         | Empty Fraction `\frac{<cursor0>}{<cursor1>}<cursor2>` |
+| `a/ `        | Fraction `\frac{a}{<cursor0>}<cursor1>`               |
+| `a/b `       | Fraction `\frac{a}{a}`                                |
+| `(a + b)/ `  | Fraction`\frac{a + b}{<cursor0>}<cursor1>`            |
+| `(a + b)/b ` | Fraction`\frac{a + b}{b}`                             |
 
 ### Expressions
 #### Superscript & Subscript
