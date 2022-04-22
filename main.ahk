@@ -1,8 +1,10 @@
 ; AHK V2
 #Include InputWrapper.ahk
 
-; TODO: Optimise loop for checking cursor jump (settings) (DONE)
-; TODO: Optimise loop for checking capture group marker (settings) (DONE)
+; Miscellaneous optimisations from https://www.autohotkey.com/boards/viewtopic.php?t=6413
+KeyHistory 0
+ListLines False
+
 ; TODO: Performance optimisation for AHK script (forums)
 ; TODO: handle selection delete
 ; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
