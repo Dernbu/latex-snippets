@@ -1,15 +1,13 @@
 ; AHK V2
 #Include InputWrapper.ahk
 
-; FIX: hotstrings should only jump to %&0%, not others (DONE)
-; TODO; make string to str converstion safe for special characters (DONE)
-; TODO: handle greek characters (DONE)
+; TODO: hotstring priority (DONE)
+; TODO: option to customise hotstrings: detectionStr, captureFunction, replacementStr
 ; TODO: \frac{}{}
 ; TODO: handle selection delete
-; TODO: come up with way to add custom hotstrings
 ; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
-; TODO: option to customise important string options
-; Currently uses space to trigger regex search, but is it possible to do it every keystroke?
+; TODO: Currently uses space to trigger regex search, but is it possible to do it every keystroke?
+; TODO: Is there a more efficient way to search through all the regex instead of looping through everything
 
 
 /*
@@ -19,6 +17,11 @@
     - %&0% makes the cursor jump to the marker after the hotstring, deleting the marker
     - %&i% makes the cursor jump to the marker (with the lowest i, i >= 1) on tap, deleting the marker
     - `r for newline
+
+    addHotString is the same thing as detecting through the regex ([^a-zA-Z0-9_]?) + searchString + $
+
+
+    - Note that hotstring priority prioritises keys added first.
 */
 
 hotStrings := InputWrapper()

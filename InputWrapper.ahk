@@ -9,7 +9,7 @@ class InputWrapper {
     /*
         Map - keys are replacement strings and value are the regex capture functions.
     */
-    captureReplacementFunctions := Map()
+    captureReplacementFunctions := []
 
     textLog := "" ; TextLog object wrapped by this object
     inputHook := "" ; InputHook object 
@@ -101,8 +101,10 @@ class InputWrapper {
 
         regexReplaced := False
         ; Loop through all replacements and capture group, and do the first one you find
-        For replacementStr, captureGroupFunction in this.captureReplacementFunctions {
-
+        For element in this.captureReplacementFunctions {
+            replacementStr := element[1] 
+            captureGroupFunction := element[2]
+            
             captureGroup := this.getRightmostCaptureGroup(captureGroupFunction)
 
             if (captureGroup == "") {
@@ -234,11 +236,11 @@ class InputWrapper {
                 Syntax: %$i% for the ith capture group
                         %&i% for the ith cursor hop (first cursor hop is executed automatically)
         */
-        this.captureReplacementFunctions.set(replacement, InputWrapper.makeRegexCaptureFunction(regex))
+        this.captureReplacementFunctions.push([replacement, InputWrapper.makeRegexCaptureFunction(regex)])
     }
 
     addHotString(string, replacement) {
-        this.captureReplacementFunctions.set("%$1%" replacement, InputWrapper.makeStringCaptureFunction(string))
+        this.captureReplacementFunctions.push(["%$1%" replacement, InputWrapper.makeStringCaptureFunction(string)])
     }
 
     /*

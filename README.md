@@ -1,4 +1,4 @@
-# Script for Latex Snippets
+# AutoHotKey Script for Latex Snippets
 This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optimised for use with [Obsidian](https://obsidian.md).
 - Note that all snippets are triggered by tab.
 
