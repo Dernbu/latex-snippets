@@ -3,8 +3,10 @@
 
 class InputWrapper {
     /*
-        A functor class that wraps around a TextLog class.
+        Setting variables
     */
+    max_capture_groups := 10 ; maximum number of regex/custom capture groups
+    max_cursor_markers := 10 ; maximum number of cursor jump markers
 
     /*
         Map - keys are replacement strings and value are the regex capture functions.
@@ -38,16 +40,20 @@ class InputWrapper {
         HotKey "~MButton", ObjBindMethod(this, "onMousePress")
         HotKey "~XButton1", ObjBindMethod(this, "onMousePress")
         HotKey "~XButton2", ObjBindMethod(this, "onMousePress") 
+        HotKey "~Escape", ObjBindMethod(this, "onMousePress") 
 
     }
 
-    gotoMarker(key, markerNo := 10) {
+    gotoMarker(key, markerNo := "") {
         /*
             Strings can be makred by %&i%, and pressing the given key will jump to the next %&i%.
                 - markerNo is the number of markers to check. Set this to 1 when this is invoked by a hotstring.
         */
 
         pressKey := True
+        if (markerNo == "") {
+            markerNo := this.max_cursor_markers + 1
+        }
 
         Loop markerNo {
             marker := "%&" A_Index-1 "%"
@@ -112,7 +118,7 @@ class InputWrapper {
             }
 
             regexReplaced := True
-            replacementStr := getRegexReplacementString(captureGroup, replacementStr)
+            replacementStr := this.getRegexReplacementString(captureGroup, replacementStr)
             this.sendBackspace(StrLen(CaptureGroup[0]))
             this.sendString(replacementStr)
 
@@ -121,7 +127,7 @@ class InputWrapper {
             Break
         }
 
-        ; if nothign is done, just send the string
+        ; if nothing is done, just send the string
         if (!regexReplaced) {
             key := StrReplace(key, "$")
             Switch key {
@@ -248,13 +254,13 @@ class InputWrapper {
             if (RegExMatch(str, regex, &capture)) {
                 return stringCaptureFunction(str)
             }
-            return ""
-        }
-
-        this.captureReplacementFunctions.push([replacement, newCaptureFuntion])
-
+        return ""
     }
-    addRegexHotString(regex, replacement) {
+
+    this.captureReplacementFunctions.push([replacement, newCaptureFuntion])
+
+}
+addRegexHotString(regex, replacement) {
         /*
             Adds a regex hotstring to the target object.
             @param regex the regex that triggers the hotstring.
@@ -264,25 +270,25 @@ class InputWrapper {
             @param replacement the replacement string to replace the target string captured by the regex.
                 Syntax: %$i% for the ith capture group
                         %&i% for the ith cursor hop (first cursor hop is executed automatically)
-        */
-        this.captureReplacementFunctions.push([replacement, InputWrapper.makeRegexCaptureFunction(regex)])
-    }
+    */
+    this.captureReplacementFunctions.push([replacement, InputWrapper.makeRegexCaptureFunction(regex)])
+}
 
-    addHotString(string, replacement) {
-        this.captureReplacementFunctions.push(["%$1%" replacement, InputWrapper.makeStringCaptureFunction(string)])
-    }
+addHotString(string, replacement) {
+    this.captureReplacementFunctions.push(["%$1%" replacement, InputWrapper.makeStringCaptureFunction(string)])
+}
 
     /*
         Utility functions to make dynamic function objects for capture groups
-    */
-    static makeRegexCaptureFunction(regex) {
+*/
+static makeRegexCaptureFunction(regex) {
     /*
         Function to dynamically generate regex capture functions from a regex string.
-        */
-        newFunction(str) {
-            capture := ""
-            ; OutputDebug str " | " regex
-            RegExMatch(str, regex, &capture)
+    */
+    newFunction(str) {
+        capture := ""
+        ; OutputDebug str " | " regex
+        RegExMatch(str, regex, &capture)
         return capture
     }
     return newFunction
@@ -340,8 +346,6 @@ _getPrintStr() {
     return this.textLog._getPrintStr()
 }
 
-}
-
 /*
 Utility functions
 */
@@ -353,8 +357,11 @@ getRegexReplacementString(captureGroup, replacementStr) {
 
     captureGroupNumber := 1
 
-    while True {
-        if (InStr(replacementStr, "%$" captureGroupNumber "%") == 0) {
+    Loop this.max_capture_groups {
+
+        ; }
+        ; while True {
+        if (InStr(replacementStr, "%$" A_Index "%") == 0) {
             Break
         }
 
@@ -369,4 +376,5 @@ getRegexReplacementString(captureGroup, replacementStr) {
     }
 
     return replacementStr
+}
 }

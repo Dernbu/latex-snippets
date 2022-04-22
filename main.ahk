@@ -1,9 +1,9 @@
 ; AHK V2
 #Include InputWrapper.ahk
 
-; TODO: hotstring priority (DONE)
-; TODO: option to customise hotstrings: detectionStr, stringCaptureFunction, stringReplacement (DONE)
-; TODO: \frac{}{}
+; TODO: Optimise loop for checking cursor jump (settings) (DONE)
+; TODO: Optimise loop for checking capture group marker (settings) (DONE)
+; TODO: Performance optimisation for AHK script (forums)
 ; TODO: handle selection delete
 ; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
 ; TODO: Currently uses space to trigger regex search, but is it possible to do it every keystroke?
@@ -26,6 +26,11 @@
 
 hotStrings := InputWrapper()
 
+/*
+    --- SETTINGS ---
+*/
+hotStrings.max_capture_groups := 2 ; Optimisation: The maximum number of capture groups needed in any regex/custom hotstring (always >= 1)
+hotStrings.max_cursor_markers := 3 ; Optimisation: Maximum number of cursor markers in any hotstring
 
 /*
     --- SYMBOLS ---
@@ -56,16 +61,16 @@ hotStrings.addHotString("Xi", "\Xi")
 hotStrings.addHotString("xi", "\xi")
 hotStrings.addHotString("Pi", "\Pi")
 hotStrings.addHotString("pi", "\pi")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Si$", "%$1%\Sigma")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?si$", "%$1%\sigma")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ta$", "%$1%\tau")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Ph$", "%$1%\Phi")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ph$", "%$1%\phi")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ch$", "%$1%\chi")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Ps$", "%$1%\Psi")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?ps$", "%$1%\psi")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?Om$", "%$1%\Omega")
-hotStrings.addRegexHotString("([^a-zA-Z0-9_]?)\\?om$", "%$1%\omega")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?Si$", "%$1%\Sigma")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?si$", "%$1%\sigma")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?ta$", "%$1%\tau")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?Ph$", "%$1%\Phi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?ph$", "%$1%\phi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?ch$", "%$1%\chi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?Ps$", "%$1%\Psi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?ps$", "%$1%\psi")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?Om$", "%$1%\Omega")
+hotStrings.addRegexHotString("([^a-zA-Z0-9_]+)\\?om$", "%$1%\omega")
 
 hotStrings.addHotString("pm", "\pm") ; pm => \pm
 hotStrings.addHotString("mp", "\mp") ; mp => \mp
@@ -82,7 +87,7 @@ hotStrings.addHotString("sq", "\sqrt{%&0%}%&1%") ; sq => \sqrt{%&0%}%&1%
 hotStrings.addHotString("sqrt", "\sqrt{%&0%}%&1%") ; sqrt => \sqrt{%&0%}%&1%
 ; hotStrings.addHotString("/", "\frac{%&0%}{%&1%}%&2%")
 
-; Fractions
+;   FRACTIONS
 hotStrings.addCustomRegexHotstring("\([a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+\)\/$", fractionOnlyNumeratorCaptureGroup, "\frac{%$1%}{%&0%}%&1%") ; a/ => \frac{a}{
 hotStrings.addCustomRegexHotstring("\([a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+\)\/[a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+$", fractionCaptureGroup, "\frac{%$1%}{%$2%}%&0%") ; a/ => \frac{a}{
 hotStrings.addRegexHotString("([a-zA-Z0-9_\\{}\(\)\[\]]+)\/$", "\frac{%$1%}{%&0%}%&1%") ; a/ => \frac{a}{|}
