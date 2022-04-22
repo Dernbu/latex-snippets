@@ -104,8 +104,8 @@ class InputWrapper {
         For element in this.captureReplacementFunctions {
             replacementStr := element[1] 
             captureGroupFunction := element[2]
-            
-            captureGroup := this.getRightmostCaptureGroup(captureGroupFunction)
+
+            captureGroup := this.getCaptureGroup(captureGroupFunction)
 
             if (captureGroup == "") {
                 Continue
@@ -171,7 +171,7 @@ class InputWrapper {
     /*
         Hotstring/hotkey functions
     */
-    getRightmostCaptureGroup(captureGroupFunction) {
+    getCaptureGroup(captureGroupFunction) {
         /*
             Check if a capture group can be found with the given function
             @param captureGroupFunction a function object that takes in a string parameter
@@ -179,6 +179,9 @@ class InputWrapper {
                 
             - The capture group is assumed to be at the end of the string (end of string is at cursor.)
             - Regex remember "$" at the end
+            - Capture Group Synatx: (x) => Array,
+                - Index 0: entire string captured
+                - Index i: ith capture group string
 
             @return "" if capture group is not found, else return the capture group itself.
         */
@@ -225,6 +228,35 @@ class InputWrapper {
         SendInput "{Backspace " StrLen(captureStr) "}{Raw}" replacementStr
     }
 
+    /*
+        Adding hotstrings
+    */
+    addCustomRegexHotstring(regex, stringCaptureFunction, replacement) {
+        /*
+            Adds a custom regex hotstring.
+            @param regex is the regex that triggers the hotstring.
+                Note that the regex is only triggered/checked when pressing space (before space has been sent)
+                Note that the regex should end with a $ (check end of string, right before caret)
+            
+            @param stringCaptureFunction is a function to return capture groups.
+                Synatx: result[0] is the entire string captured, and result[i] is the ith capture group for i > 0.
+            
+            @param replacement the replacement string to replace the target string captured by the regex.
+                Syntax: %$i% for the ith capture group
+                        %&i% for the ith cursor hop (first cursor hop is executed automatically)
+        */
+        newCaptureFuntion(str) {
+            capture := ""
+            RegExMatch(str, regex, &capture)
+            if (capture != "") {
+                return stringCaptureFunction(str)
+            }
+            return ""
+        }
+
+        return newCaptureFuntion
+
+    }
     addRegexHotString(regex, replacement) {
         /*
             Adds a regex hotstring to the target object.
@@ -232,7 +264,7 @@ class InputWrapper {
                 Note that the regex is only triggered/checked when pressing space (before space has been sent)
                 Note that the regex should end with a $ (check end of string, right before caret)
             
-            @parem replacement the replacement string to replace the target string captured by the regex.
+            @param replacement the replacement string to replace the target string captured by the regex.
                 Syntax: %$i% for the ith capture group
                         %&i% for the ith cursor hop (first cursor hop is executed automatically)
         */
@@ -252,6 +284,7 @@ class InputWrapper {
         */
         newFunction(str) {
             capture := ""
+            ; OutputDebug str " | " regex
             RegExMatch(str, regex, &capture)
         return capture
     }
@@ -259,9 +292,9 @@ class InputWrapper {
 }
 
 static makeStringCaptureFunction(str) {
-            /*
-            Function to dynamically generate capture functions from a string.
-            TODO more efficient way?
+                /*
+                Function to dynamically generate capture functions from a string.
+                TODO more efficient way?
     */
     ; escaping special charactes  (PCRE)
     ; SourceL https://stackoverflow.com/questions/399078/what-special-characters-must-be-escaped-in-regular-expressions
@@ -276,14 +309,14 @@ static makeStringCaptureFunction(str) {
     str := strReplace(str, ")", "\)") 
     str := strReplace(str, "[", "\[") 
     str := strReplace(str, "]", "\]") 
-    str := strReplace(str, "{", "\{")  
+    str := strReplace(str, "{", "\{") 
     str := strReplace(str, "}", "\}") 
     str := strReplace(str, "\", "\\") 
     str := strReplace(str, "|", "\|")
     return InputWrapper.makeRegexCaptureFunction("([^a-zA-Z0-9_]?)" str "$")
 }
-    /*
-        State helping functions
+        /*
+            State helping functions
 */
 static getCapsLockState() {
     return GetKeyState("CapsLock", "T")
