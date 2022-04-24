@@ -110,6 +110,19 @@ class TextLog {
             this.sendString(Chr(13))
     }
 
+    deleteSelection(str) {
+        len := StrLen(str)
+        if (SubStr(this.loggedstring, this.caretPos, len) == str) {
+            this.sendDelete(len)
+            return
+        }
+
+        if (SubStr(this.loggedstring, this.caretPos - len, len) == str) {
+            this.sendBackspace(len)
+            return
+        }
+    }
+
     reset() {
         ; Reset the object
         this.loggedString := [""]

@@ -1,48 +1,28 @@
-;AHK V2
-; a := ["(one)/", "((one))/", "(one (two))/"]
+; OutputDebug "Starting Input Logger:"
+; ih := ""
+; ih := InputHook("VC")
+; ih.keyOpt("{All}", "NV")
+; ; ih.OnKeyDown := Func("onKeyDown")
+; ih.OnKeyDown := onKeyDown
+; ih.Start()
 
-; For str in a {
-;     OutputDebug fractionOnlyNumeratorCaptureGroup(str)[0]
+; onKeyDown(hook, vk, sc) {
+;     ; Check if anything is selected
+;     ClipSaved := A_Clipboard
+;     A_Clipboard := "" ; Start off empty to allow ClipWait to detect when the text has arrived.
+;     SendInput "^c"
+;     ClipWait ; Wait for the clipboard to contain text.
+;     MsgBox "Control-C copied the following contents to the clipboard:`n`n" A_Clipboard
 ; }
-; capture := ""
 
+#c::{
+oCB := A_Clipboard  ; save clipboard contents
+Send "^c"
+ClipWait 1
 
-; RegExMatch("(a+b)/", "\([a-zA-Z0-9_\\{}\(\)\[\]\+\-\*]+\)\/$", &capture)
-; OutputDebug capture[0]
-; OutputDebug capture == ""
+OutputDebug "Control-C copied the following contents to the clipboard:"
+OutputDebug A_Clipboard
 
-test := "(one)/two"
-test := "(one + \alpha)/two"
-fractionCaptureGroup(test)
-
-fractionCaptureGroup(str) {
-    ; for getting the caputre group of (something)/something_else
-    num_dim_array := StrSplit(str, "/")
-    
-    ; numerator:
-    depth := 0
-    index := StrLen(num_dim_array[1])
-    Loop StrLen(num_dim_array[1]) {
-        if (SubStr(num_dim_array[1], index, 1) == ")") {
-            depth += 1
-        }
-        if (SubStr(num_dim_array[1], index, 1) == "(") {
-            depth -= 1
-        }
-        if (depth == 0) {
-            break
-        }
-        index -= 1
-    }
-
-    
-    OutputDebug str
-    OutputDebug SubStr(num_dim_array[1], index + 1, StrLen(num_dim_array[1]) - index - 1)
-    OutputDebug num_dim_array[2]
-
-    return Map(
-        0, str
-        1, SubStr(num_dim_array[1], index + 1, StrLen(num_dim_array[1]) - index - 1)
-        2, num_dim_array[2]
-    )
+A_Clipboard := oCB         ; return original Clipboard contents
+return
 }

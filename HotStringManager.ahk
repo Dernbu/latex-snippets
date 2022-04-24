@@ -1,12 +1,13 @@
 ; AHK V2
 #Include TextLogger.ahk
 
-class InputWrapper {
+class HotStringManager {
     /*
         Setting variables
     */
     max_capture_groups := 10 ; maximum number of regex/custom capture groups
     max_cursor_markers := 10 ; maximum number of cursor jump markers
+    allowed_prefix_regex := "([^a-zA-Z0-9_]+|^)" ; This is a regex that corresponds to the valid characters before a hotstring
 
     /*
         Map - keys are replacement strings and value are the regex capture functions.
@@ -153,16 +154,30 @@ class InputWrapper {
         keyName := GetKeyName(Format("vk{:x}sc{:x}", vk, sc))
         OutputDebug "Key Down: " keyName
 
+        ; ; Check if anything is selected
+        ; ClipSaved := A_Clipboard
+        ; A_Clipboard := "" ; Start off empty to allow ClipWait to detect when the text has arrived.
+        ; SendInput "^c"
+        ; ClipWait ; Wait for the clipboard to contain text.
+        ; MsgBox "Control-C copied the following contents to the clipboard:`n`n" A_Clipboard
+    
+        ; ; If there is a selection
+        ; if (A_Clipboard != "" && keyName != "Left" && keyName != "Right") {
+        ;     this.textLog.deleteSelection(A_Clipboard)
+        ; }
+
+        ; A_Clipboard := ClipSaved ;restore clipboard
+
         Switch (keyName) {
 
         Case "Backspace":
-            this.textLog.sendBackspace(1, InputWrapper.getCtrlState())
+            this.textLog.sendBackspace(1, HotStringManager.getCtrlState())
         Case "Left":
-            this.textLog.sendLeft(1, InputWrapper.getCtrlState())
+            this.textLog.sendLeft(1, HotStringManager.getCtrlState())
         Case "Right":
-            this.textLog.sendRight(1, InputWrapper.getCtrlState())
+            this.textLog.sendRight(1, HotStringManager.getCtrlState())
         Case "Delete":
-            this.textLog.sendDelete(1, InputWrapper.getCtrlState())
+            this.textLog.sendDelete(1, HotStringManager.getCtrlState())
 
         }
 
@@ -271,17 +286,17 @@ addRegexHotString(regex, replacement) {
                 Syntax: %$i% for the ith capture group
                         %&i% for the ith cursor hop (first cursor hop is executed automatically)
     */
-    this.captureReplacementFunctions.push([replacement, InputWrapper.makeRegexCaptureFunction(regex)])
+    this.captureReplacementFunctions.push([replacement, this.makeRegexCaptureFunction(regex)])
 }
 
 addHotString(string, replacement) {
-    this.captureReplacementFunctions.push(["%$1%" replacement, InputWrapper.makeStringCaptureFunction(string)])
+    this.captureReplacementFunctions.push(["%$1%" replacement, this.makeStringCaptureFunction(string)])
 }
 
     /*
         Utility functions to make dynamic function objects for capture groups
 */
-static makeRegexCaptureFunction(regex) {
+makeRegexCaptureFunction(regex) {
     /*
         Function to dynamically generate regex capture functions from a regex string.
     */
@@ -294,7 +309,7 @@ static makeRegexCaptureFunction(regex) {
     return newFunction
 }
 
-static makeStringCaptureFunction(str) {
+makeStringCaptureFunction(str) {
                 /*
                 Function to dynamically generate capture functions from a string.
                 TODO more efficient way?
@@ -316,7 +331,7 @@ static makeStringCaptureFunction(str) {
     str := strReplace(str, "}", "\}") 
     str := strReplace(str, "\", "\\") 
     str := strReplace(str, "|", "\|")
-    return InputWrapper.makeRegexCaptureFunction("([^a-zA-Z0-9_]?)" str "$")
+    return this.makeRegexCaptureFunction(this.allowed_prefix_regex str "$")
 }
         /*
             State helping functions
