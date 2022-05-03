@@ -7,7 +7,7 @@ class HotStringManager {
     */
     max_capture_groups := 10 ; maximum number of regex/custom capture groups
     max_cursor_markers := 10 ; maximum number of cursor jump markers
-    allowed_prefix_regex := "([^a-zA-Z0-9_]+|^)" ; This is a regex that corresponds to the valid characters before a hotstring
+    allowed_prefix_regex := "(?<=.)" ; This is a regex that corresponds to the valid characters before a hotstring
 
     /*
         Map - keys are replacement strings and value are the regex capture functions.
@@ -290,7 +290,7 @@ addRegexHotString(regex, replacement) {
 }
 
 addHotString(string, replacement) {
-    this.captureReplacementFunctions.push(["%$1%" replacement, this.makeStringCaptureFunction(string)])
+    this.captureReplacementFunctions.push([replacement, this.makeStringCaptureFunction(string)])
 }
 
     /*

@@ -1,6 +1,8 @@
 # AutoHotKey Script for Latex Snippets
 This is my personal script for $\LaTeX$ snippets for latex/markdown files. Optimised for use with [Obsidian](https://obsidian.md).
-- Note that all snippets are triggered by tab.
+- Note that all snippets are triggered by space.
+- This script runs on [AutoHotKey v2 beta](https://www.autohotkey.com/v2/).
+
 
 ## Environments
 ### Typing `\begin{environment}`

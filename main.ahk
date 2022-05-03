@@ -5,6 +5,7 @@
 KeyHistory 0
 ListLines False
 
+; TODO: Hotstring regex: use lookahead instead of the other thing
 ; TODO: handle selection delete
 ; TODO: ctrl backspace, left right can be handled as ctrl shift backspace, left right
 ; TODO: Currently uses space to trigger regex search, but is it possible to do it every keystroke?
@@ -30,7 +31,8 @@ hotStrings := HotStringManager()
 */
 hotStrings.max_capture_groups := 2 ; Optimisation: The maximum number of capture groups needed in any regex/custom hotstring (always >= 1)
 hotStrings.max_cursor_markers := 3 ; Optimisation: Maximum number of cursor markers in any hotstring
-hotStrings.allowed_prefix_regex := hotStrings.allowed_prefix_regex "" ; This is a regex that corresponds to the valid characters before a hotstring
+hotStrings.allowed_prefix_regex := "(?<=[^a-zA-Z0-9_^]|^)" ; This is a regex that corresponds to the valid characters before a hotstring
+
 
 /*
     --- SYMBOLS ---
@@ -41,41 +43,40 @@ hotStrings.allowed_prefix_regex := hotStrings.allowed_prefix_regex "" ; This is 
         \beta - be clashes with the word be, and so beta is the shortcut instead.
         two-letter greek words, cause \mu => \mu as a hotstring is dumb
 */
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?al$","%$1%\alpha")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?al$","\alpha")
 hotStrings.addHotString("\be","\beta")
 hotStrings.addHotString("beta","\beta") ; be is a word.
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ga$","%$1%\gamma")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?De$","%$1%\Delta")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?de$","%$1%\delta")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ep$","%$1%\epsilon")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ze$","%$1%\zeta")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?et$","%$1%\eta")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Th$","%$1%\Theta")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?th$","%$1%\theta")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?io$","%$1%\iota")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ka$","%$1%\kappa")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?La$","%$1%\Lambda")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?la$","%$1%\lambda")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ga$","\gamma")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?De$","\Delta")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?de$","\delta")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ep$","\epsilon")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ze$","\zeta")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?et$","\eta")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Th$","\Theta")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?th$","\theta")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?io$","\iota")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ka$","\kappa")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?La$","\Lambda")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?la$","\lambda")
 hotStrings.addHotString("mu", "\mu") ; Obviously, \mu => \mu is a shitty hotstring
 hotStrings.addHotString("nu", "\nu")
 hotStrings.addHotString("Xi", "\Xi")
 hotStrings.addHotString("xi", "\xi")
 hotStrings.addHotString("Pi", "\Pi")
 hotStrings.addHotString("pi", "\pi")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Si$", "%$1%\Sigma")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?si$", "%$1%\sigma")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ta$", "%$1%\tau")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Ph$", "%$1%\Phi")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ph$", "%$1%\phi")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ch$", "%$1%\chi")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Ps$", "%$1%\Psi")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ps$", "%$1%\psi")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Om$", "%$1%\Omega")
-hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?om$", "%$1%\omega")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Si$", "\Sigma")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?si$", "\sigma")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ta$", "\tau")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Ph$", "\Phi")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ph$", "\phi")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ch$", "\chi")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Ps$", "\Psi")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?ps$", "\psi")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?Om$", "\Omega")
+hotStrings.addRegexHotString(hotStrings.allowed_prefix_regex "\\?om$", "\omega")
 
-hotStrings.addHotString("pm", "\pm") ; pm => \pm
-hotStrings.addHotString("mp", "\mp") ; mp => \mp
-hotStrings.addHotString("mp", "\mp") ; mp => \mp
+hotStrings.addRegexHotString("(?<=[^a-zA-Z0-9_\\]|^)pm", "\pm") ; pm => \pm
+hotStrings.addRegexHotString("(?<=[^a-zA-Z0-9_\\]|^)mp", "\mp") ; mp => \mp
 
 /*
     --- TEXT MODIFIERS ---
