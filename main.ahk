@@ -31,8 +31,7 @@ hotStrings := HotStringManager()
 */
 hotStrings.max_capture_groups := 2 ; Optimisation: The maximum number of capture groups needed in any regex/custom hotstring (always >= 1)
 hotStrings.max_cursor_markers := 3 ; Optimisation: Maximum number of cursor markers in any hotstring
-hotStrings.allowed_prefix_regex := "(?<=[^a-zA-Z0-9_^]|^)" ; This is a regex that corresponds to the valid characters before a hotstring
-
+hotStrings.allowed_prefix_regex := "(?<=[^a-zA-Z0-9_]|^)" ; This is a regex that corresponds to the valid characters before a hotstring
 
 /*
     --- SYMBOLS ---
@@ -84,7 +83,7 @@ hotStrings.addRegexHotString("(?<=[^a-zA-Z0-9_\\]|^)mp", "\mp") ; mp => \mp
 
 hotStrings.addRegexHotString("([a-zA-Z0-9_]*)\.(?:hat|aht|ath)$", "\hat{%$1%}") ; x.hat, x.aht, x.ath => \hat{x}
 hotStrings.addRegexHotString("([a-zA-Z0-9_]*)\.bar$", "\overline{%$1%}") ; x.bar => \overline{x}
-hotStrings.addRegexHotString("([\^_])([a-zA-Z0-9]+)$", "%$1%{%$2%}") ; x_bar, x^hat => x_{bar}, x^{hat}
+hotStrings.addRegexHotString("([\^_])([-a-zA-Z0-9}\\][-a-zA-Z0-9{}}\\,\|]*)$", "%$1%{%$2%}") ; x_bar, x^hat => x_{bar}, x^{hat}
 hotStrings.addHotString("sq", "\sqrt{%&0%}%&1%") ; sq => \sqrt{%&0%}%&1%
 hotStrings.addHotString("sqrt", "\sqrt{%&0%}%&1%") ; sqrt => \sqrt{%&0%}%&1%
 ; hotStrings.addHotString("/", "\frac{%&0%}{%&1%}%&2%")
